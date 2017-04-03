@@ -1,6 +1,7 @@
 package com.bjagud;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
@@ -67,6 +68,24 @@ public class StatsHeapTest {
 		}
 	}
 	
+	@Test
+	public void testHeapSort() {
+		
+		for(HeapValidator validator : validators) {
+			
+			StatsHeap heap = validator.getHeap();
+			heap.heapSort();
+			
+			int[] heapSorted = heap.getHeapArray();
+			int[] sorted = validator.getSortedInput();
+			
+			for(int i = 0; i < validator.getInput().length; i++) {
+				//It ain't pretty, but need to account for leading zero element in heap array
+				Assert.assertEquals(sorted[i], heapSorted[i+1]);
+			}
+		}
+	}
+	
 	/**
 	 * Inner class holds input and respective expected values. 
 	 * 
@@ -110,6 +129,12 @@ public class StatsHeapTest {
 		
 		public StatsHeap getHeap() {
 			return heap;
+		}
+		
+		public int[] getSortedInput() {
+			int[] sorted = input;
+			Arrays.sort(sorted);
+			return sorted;
 		}
 	}
 }

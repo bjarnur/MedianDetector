@@ -16,6 +16,10 @@ package com.bjagud;
  * sorts the heap completely, and then offers direct access to 
  * the median index. 
  * 
+ * A big part of this implementation, is inspired by the 
+ * Priority Queues chapter in Sedgewick's and Wayne's 
+ * Algorithms book. 
+ * 
  * @author bjarni
  */
 public class StatsHeap {
@@ -64,6 +68,24 @@ public class StatsHeap {
 	}
 	
 	/**
+	 By iterating through the heap top-down and sinking every
+	 element this method will result in the array being strictly
+	 sorted. This enables us to access the median directly. */
+	public void heapSort() {
+		
+		int iterator = currentBottom;	
+		while(iterator > 1) {
+			exch(1, iterator);
+			iterator--;
+			sink(1, iterator);
+		}
+	}
+	
+	public int getMedian() {
+		return 0;
+	}
+	
+	/**
 	 Pop the max element of the heap, returns max element */
 	public int delMax() {
 		
@@ -78,7 +100,7 @@ public class StatsHeap {
 		//Sink switch element
 		sink(1);
 		return max;
-	}	
+	}
 	
 	/**
 	 The node at the given index "swims up" until it's 
@@ -104,12 +126,17 @@ public class StatsHeap {
 	 The node at the given index, is "sunk" (i.e. moved lower
 	 down in the heap) until it is in the correct place relative
 	 to its children. */
-	private void sink(int node) {
-		
-		while(node * 2 <= currentBottom) {
+	private void sink(int node) {		
+		sink(node, currentBottom);
+	}
+	
+	/**
+	 For heap sort we need to be able to explicitly define the bottom */
+	private void sink(int node, int bottom) {
+		while(node * 2 <= bottom) {
 			
 			int child = node * 2;		
-			if(child < currentBottom && heapArray[child] < heapArray[child + 1]) {
+			if(child < bottom && heapArray[child] < heapArray[child + 1]) {
 				//Child has a larger sibling
 				child++;
 			}						
@@ -123,7 +150,7 @@ public class StatsHeap {
 			exch(node, child);
 			node = child;
 		}
-	}
+	}	
 	
 	/**
 	 Exchanges the elements at indices a and b */
@@ -131,5 +158,9 @@ public class StatsHeap {
 		int temp = heapArray[a];
 		heapArray[a] = heapArray[b];
 		heapArray[b] = temp;
+	}
+	
+	public int[] getHeapArray() {
+		return heapArray;
 	}
 }
