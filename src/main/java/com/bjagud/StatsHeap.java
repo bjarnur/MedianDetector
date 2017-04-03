@@ -9,10 +9,12 @@ package com.bjagud;
  * felt the most straight-forward, since we are working with 
  * integers, and not complex data types. 
  * 
- * To heapify the array we use sink rather than swim, the reason for
- * this is that we only need to iterate over half the array, since 
- * we know that all root elements of the heap will be sorted as we 
- * iterate the parents. 
+ * In the current implementation the has one method that provides
+ * access to the median value. The downside of this method is that 
+ * it pops off half of the que, making it useless for further
+ * operations. A possible improvement is to add a method that 
+ * sorts the heap completely, and then offers direct access to 
+ * the median index. 
  * 
  * @author bjarni
  */
@@ -47,6 +49,18 @@ public class StatsHeap {
 	 Get the max element without removing it from the heap */
 	public int peakMax() {
 		return heapArray[1];
+	}
+	
+	/**
+	 Pops half of the queue and returns the median value */
+	public int popForMedian() {
+		
+		int median = -1;
+		int medianIndex = currentBottom/2;
+		for(int i = 0; i <= medianIndex; i++) {
+			median = delMax();
+		}
+		return median;
 	}
 	
 	/**
@@ -118,18 +132,4 @@ public class StatsHeap {
 		heapArray[a] = heapArray[b];
 		heapArray[b] = temp;
 	}
-	
-	// -- Work in progress below this line -- 
-	
-	
-	/** 
-	 Converts a normal array into a heap */
-	private void heapify() {		
-		for(int index = size/2; index >= 1; index--) {
-			sink(index);
-		}
-	}
-	
-	
-	
 }

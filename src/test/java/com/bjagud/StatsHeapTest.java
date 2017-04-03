@@ -25,9 +25,9 @@ public class StatsHeapTest {
 	public void setup() {
 
 		validators = new ArrayList<HeapValidator>();
-		validators.add(new HeapValidator(input1, 8, 1));
-		validators.add(new HeapValidator(input2, 3, 1));
-		validators.add(new HeapValidator(input3, 99, 2));
+		validators.add(new HeapValidator(input1, 8, 1, 6));
+		validators.add(new HeapValidator(input2, 3, 1, 2));
+		validators.add(new HeapValidator(input3, 99, 2, 58));
 	}
 	
 	@Test
@@ -56,6 +56,17 @@ public class StatsHeapTest {
 		}
 	}
 	
+	@Test
+	public void testPopForMedian() {
+		
+		for(HeapValidator validator : validators) {
+			
+			StatsHeap heap = validator.getHeap();
+			int median = heap.popForMedian();
+			Assert.assertEquals(validator.getMedian(), median);
+		}
+	}
+	
 	/**
 	 * Inner class holds input and respective expected values. 
 	 * 
@@ -66,12 +77,14 @@ public class StatsHeapTest {
 		private int[] input;
 		private int maxNum;
 		private int minNum;
+		private int median;
 		private StatsHeap heap;
 		
-		public HeapValidator(int[] input, int max, int min) {
+		public HeapValidator(int[] input, int max, int min, int median) {
 			this.input = input;
 			this.maxNum = max;
 			this.minNum = min;
+			this.median = median;
 			
 			heap = new StatsHeap(input.length);
 			for(int i : input) {
@@ -89,6 +102,10 @@ public class StatsHeapTest {
 		
 		public int getMinNum() {
 			return minNum;
+		}
+		
+		public int getMedian() {
+			return median;
 		}
 		
 		public StatsHeap getHeap() {
