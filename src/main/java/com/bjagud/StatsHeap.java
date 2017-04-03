@@ -19,7 +19,7 @@ package com.bjagud;
 public class StatsHeap {
 
 	private int size;
-	private int currentMin = 0;
+	private int currentBottom = 0;
 	
 	/**
 	 Array representation of a heap. Index 0 will be left unused, 
@@ -38,9 +38,9 @@ public class StatsHeap {
 	 Insert the given element into the heap */
 	public void insert(int num) {
 		
-		currentMin++;
-		heapArray[currentMin] = num;
-		swim(currentMin);
+		currentBottom++;
+		heapArray[currentBottom] = num;
+		swim(currentBottom);
 	}
 	
 	/**
@@ -48,6 +48,23 @@ public class StatsHeap {
 	public int peakMax() {
 		return heapArray[1];
 	}
+	
+	/**
+	 Pop the max element of the heap, returns max element */
+	public int delMax() {
+		
+		//Get max and sent it to bottom
+		int max = heapArray[1];	
+		exch(1, currentBottom);
+				
+		//Remove bottom (prev. max) from queue
+		heapArray[currentBottom] = -1;
+		currentBottom--;
+		
+		//Sink switch element
+		sink(1);
+		return max;
+	}	
 	
 	/**
 	 The node at the given index "swims up" until it's 
@@ -70,44 +87,18 @@ public class StatsHeap {
 	}
 	
 	/**
-	 Exchanges the elements at indices a and b */
-	private void exch(int a, int b) {		
-		int temp = heapArray[a];
-		heapArray[a] = heapArray[b];
-		heapArray[b] = temp;
-	}
-	
-	// -- Work in progress below this line -- 
-	
-	/**
-	 Pop the max element of the heap, returns max element */
-	public int delMax() {
-		return 0;
-	}	
-	
-	
-	/** 
-	 Converts a normal array into a heap */
-	private void heapify() {		
-		for(int index = size/2; index >= 1; index--) {
-			sink(index);
-		}
-	}
-	
-	
-	/**
 	 The node at the given index, is "sunk" (i.e. moved lower
 	 down in the heap) until it is in the correct place relative
 	 to its children. */
 	private void sink(int node) {
 		
-		while(node * 2 < size) {
+		while(node * 2 <= currentBottom) {
 			
-			int child = node * 2;			
-			if(child < size && heapArray[child] < heapArray[child + 1]) {
+			int child = node * 2;		
+			if(child < currentBottom && heapArray[child] < heapArray[child + 1]) {
 				//Child has a larger sibling
 				child++;
-			}
+			}						
 			
 			if(!(heapArray[node] < heapArray[child])) {
 				//Node is in correct place relative to children
@@ -119,4 +110,26 @@ public class StatsHeap {
 			node = child;
 		}
 	}
+	
+	/**
+	 Exchanges the elements at indices a and b */
+	private void exch(int a, int b) {		
+		int temp = heapArray[a];
+		heapArray[a] = heapArray[b];
+		heapArray[b] = temp;
+	}
+	
+	// -- Work in progress below this line -- 
+	
+	
+	/** 
+	 Converts a normal array into a heap */
+	private void heapify() {		
+		for(int index = size/2; index >= 1; index--) {
+			sink(index);
+		}
+	}
+	
+	
+	
 }
