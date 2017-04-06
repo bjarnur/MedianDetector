@@ -1,16 +1,12 @@
 package com.bjagud;
 
 /**
- * This heap-like data structure will allow us to semi-sort input
- * as we read it in. The sorting will require no additional memory, 
- * but accessing the median instantly will not be possible. 
- * 
  * This implementation uses an array to represent the heap, this
  * felt the most straight-forward, since we are working with 
  * integers, and not complex data types. 
  * 
- * This implementation offers two means to access the median value. 
- * One brute force approach that pops values out of the queue one at 
+ * The implementation offers two ways to access the median value. 
+ * One naive approach that pops values out of the queue one at 
  * a time, until we reach the median, and then an approach that uses
  * heap sort to enable us to access the median directly (which we can 
  * do because the heap is implemented as an array).
