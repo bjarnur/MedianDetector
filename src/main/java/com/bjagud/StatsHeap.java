@@ -1,20 +1,19 @@
 package com.bjagud;
 
 /**
- * This heap-like data structure will allow us to sort input
- * as we read it in. Sorting will require no additional memory, 
+ * This heap-like data structure will allow us to semi-sort input
+ * as we read it in. The sorting will require no additional memory, 
  * but accessing the median instantly will not be possible. 
  * 
  * This implementation uses an array to represent the heap, this
  * felt the most straight-forward, since we are working with 
  * integers, and not complex data types. 
  * 
- * In the current implementation the has one method that provides
- * access to the median value. The downside of this method is that 
- * it pops off half of the que, making it useless for further
- * operations. A possible improvement is to add a method that 
- * sorts the heap completely, and then offers direct access to 
- * the median index. 
+ * This implementation offers two means to access the median value. 
+ * One brute force approach that pops values out of the queue one at 
+ * a time, until we reach the median, and then an approach that uses
+ * heap sort to enable us to access the median directly (which we can 
+ * do because the heap is implemented as an array).
  * 
  * A big part of this implementation, is inspired by the 
  * Priority Queues chapter in Sedgewick's and Wayne's 
@@ -45,7 +44,7 @@ public class StatsHeap {
 	public void insert(int num) {
 		
 		currentBottom++;
-		heapArray[currentBottom] = num;
+		heapArray[currentBottom] = num;			
 		swim(currentBottom);
 	}
 	
@@ -53,6 +52,24 @@ public class StatsHeap {
 	 Get the max element without removing it from the heap */
 	public int peakMax() {
 		return heapArray[1];
+	}
+	
+	
+	/**
+	 Pop the max element of the heap, returns max element */
+	public int delMax() {
+		
+		//Get max and sent it to bottom
+		int max = heapArray[1];	
+		exch(1, currentBottom);
+				
+		//Remove bottom (prev. max) from queue
+		heapArray[currentBottom] = -1; //-1 is redundant, mainly included for debugging purposes
+		currentBottom--;
+		
+		//Sink switch element
+		sink(1);
+		return max;
 	}
 	
 	/**
@@ -68,10 +85,20 @@ public class StatsHeap {
 	}
 	
 	/**
+	 Returns the median value of the array */
+	public int getMedian() {
+		heapSort();
+		int midIndex = (currentBottom + 1) / 2;
+		return heapArray[midIndex];
+	}
+	
+	/**
 	 By iterating through the heap top-down and sinking every
 	 element this method will result in the array being strictly
 	 sorted. This enables us to access the median directly. */
-	public void heapSort() {
+	void heapSort() {
+		
+		heapify();
 		
 		int iterator = currentBottom;	
 		while(iterator > 1) {
@@ -81,25 +108,12 @@ public class StatsHeap {
 		}
 	}
 	
-	public int getMedian() {
-		return 0;
-	}
-	
 	/**
-	 Pop the max element of the heap, returns max element */
-	public int delMax() {
-		
-		//Get max and sent it to bottom
-		int max = heapArray[1];	
-		exch(1, currentBottom);
-				
-		//Remove bottom (prev. max) from queue
-		heapArray[currentBottom] = -1;
-		currentBottom--;
-		
-		//Sink switch element
-		sink(1);
-		return max;
+	 Ensures that heapArray is structured as proper heap */
+	private void heapify() {
+		for(int index = currentBottom/2; index >= 1; index--) {
+			sink(index);
+		}
 	}
 	
 	/**
@@ -131,7 +145,8 @@ public class StatsHeap {
 	}
 	
 	/**
-	 For heap sort we need to be able to explicitly define the bottom */
+	 Overload of <code>sink</code> for heap sort, where we need to 
+	 be able to explicitly define where the bottom pointer lies */
 	private void sink(int node, int bottom) {
 		while(node * 2 <= bottom) {
 			
@@ -160,7 +175,9 @@ public class StatsHeap {
 		heapArray[b] = temp;
 	}
 	
-	public int[] getHeapArray() {
+	/**
+	 Only included for testing purposes */
+	int[] getHeapArray() {
 		return heapArray;
 	}
 }
