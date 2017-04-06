@@ -25,18 +25,6 @@ public class Stats {
 		for(int t : tests) {
 			System.out.println("Median from test " + t + ": " + getMedian(t));
 		}
-	
-		InputStream iss = Stats.class.getResourceAsStream("test7.txt");
-		Scanner sscanner = new Scanner(iss).useDelimiter(", ");
-		
-
-		int conut = 0;
-		while(sscanner.hasNext()) {
-			sscanner.nextInt();
-			conut++;
-		}
-		System.out.println(conut);
-		
 	}
 	
 	private static int getMedian(int testNumber) {
